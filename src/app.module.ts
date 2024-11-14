@@ -7,6 +7,7 @@ import { SeedModule } from './seed/seed.module';
 import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -25,9 +26,9 @@ import { join } from 'path';
       synchronize: true,
     }),
 
-    ServeStaticModule.forRoot({  
-      rootPath: join(__dirname,'..','public'), 
-       }) ,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
 
     ProductsModule,
 
@@ -35,7 +36,10 @@ import { join } from 'path';
 
     SeedModule,
 
-    FilesModule,],
+    FilesModule,
+
+    AuthModule,
+  ],
 
 })
-export class AppModule {}
+export class AppModule { }
