@@ -6,6 +6,8 @@ import * as bcrypt from 'bcrypt' //Incrptar Password
 
 import { LoginUserDto, CreateUserDto } from './dto';
 import { User } from './entities/user.entity';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { JwtService } from '@nestjs/jwt';
 
 
 @Injectable()
@@ -13,7 +15,8 @@ export class AuthService {
 
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    private readonly jwtService:JwtService
   ) { }
 
 
@@ -31,12 +34,15 @@ export class AuthService {
       await this.userRepository.save(user)
       delete user.password
 
-      return user
+      return {
+        ...user,
+        token: this.getJwtToken({ email: user.email })
+      }
+  
 
     } catch (error) {
 
       this.handleDBErrors(error)
-
     }
   }
 
@@ -54,7 +60,10 @@ export class AuthService {
     if (!bcrypt.compareSync(password, user.password))// comparamos la data ingresada con la de la DB
       throw new UnauthorizedException('Credentials are not valid(password)')
 
-    return user;
+    return {
+      ...user,
+      token: this.getJwtToken({ email: user.email })
+    }
 
   }
 
@@ -63,6 +72,14 @@ export class AuthService {
   acciones(yarn add -D @types/passport-jwt, @nestjs/jwt passport - jwt, @nestjs / passport passport)
   */
 
+
+  //metodo de crear JWT
+
+  private getJwtToken( payload: JwtPayload){
+    //jwtervice hace parte de la libreria
+    const token = this.jwtService.sign( payload );
+    return token
+  }
 
 
   private handleDBErrors(error: any) {

@@ -7,9 +7,11 @@ import { User } from './entities/user.entity';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
+    ConfigModule,
     TypeOrmModule.forFeature([User]),
     //Configuracion JWT 
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -27,7 +29,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           secret: configService.get('JWT_SECRET'),
           singOptions: {
             expiresIn: '2h'
-          }
+          } 
         }
       }
     })
@@ -42,9 +44,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     // })
   ],
   exports: [
-    TypeOrmModule
+    TypeOrmModule,
+    JwtStrategy,
+    PassportModule,
+    JwtModule
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService,JwtStrategy],
 })
 export class AuthModule { }
