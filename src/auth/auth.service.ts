@@ -36,7 +36,7 @@ export class AuthService {
 
       return {
         ...user,
-        token: this.getJwtToken({ email: user.email })
+        token: this.getJwtToken({ id: user.id })
       }
   
 
@@ -52,7 +52,7 @@ export class AuthService {
 
     const user = await this.userRepository.findOne({
       where: { email },
-      select: { email: true, password: true }// campos deseados para mostrar
+      select: { email: true, password: true, id:true }// campos deseados para mostrar
     })
 
     if (!user)
@@ -62,7 +62,7 @@ export class AuthService {
 
     return {
       ...user,
-      token: this.getJwtToken({ email: user.email })
+      token: this.getJwtToken({ id: user.id })
     }
 
   }
@@ -76,7 +76,7 @@ export class AuthService {
   //metodo de crear JWT
 
   private getJwtToken( payload: JwtPayload){
-    //jwtervice hace parte de la libreria
+    //jwtService hace parte de la libreria
     const token = this.jwtService.sign( payload );
     return token
   }

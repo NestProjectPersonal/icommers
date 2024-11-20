@@ -4,6 +4,7 @@ import { SeedController } from './seed.controller';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from 'src/products/products.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 
 
@@ -11,7 +12,8 @@ import { ProductsModule } from 'src/products/products.module';
   controllers: [SeedController],
   providers: [SeedService],
   imports: [
-      ProductsModule
+    AuthModule,
+    ProductsModule
   ]
 })
 export class SeedModule { }

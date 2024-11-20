@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Product } from "src/products/entities";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
  
 
 @Entity('users')
@@ -30,5 +31,12 @@ export class User {
         default:['user']
     })
     roles: string[];
+
+@OneToMany(
+    ()=> Product,
+    (product) =>product.user
+)
+product: Product;
+
 
 }
