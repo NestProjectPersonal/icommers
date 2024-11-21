@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -6,13 +7,19 @@ import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { Auth, GetUser } from 'src/auth/decorators';
 import { ValidRoles } from 'src/auth/interfaces';
 import { User } from 'src/auth/entities/user.entity';
+import { Product } from './entities';
 
+@ApiTags('Products')// Esta configuracion ya se realiza por defecto
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) { }
 
+  
   @Post()
   @Auth()
+  @ApiResponse({status: 201, description: 'Product was created', type: Product})//Se describe las posibles respuesta del endpoint(negativas o positivas) type sera el tipo de valor de retorno
+  @ApiResponse({status: 400, description: 'Bad request'}) //
+  @ApiResponse({status: 403, description: 'Forbidden'})
   create(@Body() createProductDto: CreateProductDto,
     @GetUser() user: User,
   ) {
